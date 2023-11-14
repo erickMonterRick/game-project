@@ -17,44 +17,33 @@ CHARACTERWIDTH = 120         #for character class function. The current size for
 CHARACTERHEIGHT = 80
 CharacterX = 100            #where you want to place the character at
 CharacterY = 500
-characterOffset = [0, 0]
-
-
-
-
-# mainDisplay.fill(BackgroundColor)  
-
 
 def main(mainDisplay):
 
-
     theMain = mainCharacter(CharacterX, CharacterY, CHARACTERWIDTH, CHARACTERHEIGHT ) #creating the main character
-    enemy1 = EnemyKnight(CharacterX + 420 , CharacterY - 135, CHARACTERWIDTH, CHARACTERHEIGHT, theMain)    #enemy 1
-    handleEvents = Event(mainDisplay, theMain, enemy1)
-
     mainGroup = pygame.sprite.Group()
-    enemyGroup = pygame.sprite.Group()
-
     mainGroup.add(theMain)
-    enemyGroup.add(enemy1)
+    
+    handleEvents = Event(mainDisplay, theMain, mainGroup)
+
+ 
 
     while True:
         Clock.tick(FPS)
         mainDisplay.blit(bg_image, (0,0))
-
+        
         handleEvents.listen(pygame.event.get())
                 
         theMain.loop()
         theMain.theMove()
-        theMain.handle_attack()
-        # theMain.check_collision(enemyGroup)
-
-        enemy1.loop()
-        enemy1.detect()
-        # enemy1.check_collision(mainGroup)
-        # enemy1.move()
         
+        #added these
+        handleEvents.waves()
+        handleEvents.check()
+        handleEvents.handleEnemies()
+        handleEvents.handle_attack()
         handleEvents.draw()
+
 
 
 
