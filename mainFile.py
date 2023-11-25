@@ -1,51 +1,67 @@
 import pygame
 
-from Characters import *
-from EventHanlder import *
+from Character import *
+from EventHandler import *
+
+
 
 pygame.init()
 
-mainDisplay = pygame.display.set_mode((800, 600))   #Display for game
-bg_image = pygame.image.load("ex_background.jpg")
-bg_image = pygame.transform.scale(bg_image, (800, 600))
-BackgroundColor = (0,0,200)
+
+
+mainDisplay = pygame.display.set_mode((800, 600))
+
+
+
+
 
 Clock = pygame.time.Clock()
-FPS = 60
 
-CHARACTERWIDTH = 120         #for character class function. The current size for one sprite is 120 x 80 pixels
-CHARACTERHEIGHT = 80
-CharacterX = 100            #where you want to place the character at
-CharacterY = 500
 
 def main(mainDisplay):
 
-    theMain = mainCharacter(CharacterX, CharacterY, CHARACTERWIDTH, CHARACTERHEIGHT ) #creating the main character
-    mainGroup = pygame.sprite.Group()
-    mainGroup.add(theMain)
-    
-    handleEvents = Event(mainDisplay, theMain, mainGroup)
+    fps = 60
 
- 
+   
+   
 
+    Neo = Necromancer(0, 500)                       #suppose to be main character. Lazy to rename
+    boss = Boss(700, 200)
+
+    handleEvents = Event(mainDisplay, boss, Neo)
+    handleEvents.load_background()
+
+     
     while True:
-        Clock.tick(FPS)
-        mainDisplay.blit(bg_image, (0,0))
-        
+        handleEvents.draw_background()
+        Clock.tick(fps)
+
+
         handleEvents.listen(pygame.event.get())
-                
-        theMain.loop()
-        theMain.theMove()
-        
-        #added these
-        handleEvents.waves()
+
+
+        pygame.draw.rect(mainDisplay, (0,0,255), Neo.rect)
+
+
+
+        handleEvents.handleWaves()
+        handleEvents.spawnEnemeies()
+        handleEvents.scoreBoard()
         handleEvents.check()
         handleEvents.handleEnemies()
-        handleEvents.handle_attack()
-        handleEvents.draw()
 
+        handleEvents.handle_cooldowns()
 
+        # handleEvents.handleBoss()
+        # handleEvents.goFaster()
 
+        
+        
+
+        Neo.loop()      #to get user input. Space for jump, d for ducking
+
+        pygame.display.update()
 
 if __name__ == "__main__":      #only runs game through this file directly
     main(mainDisplay)
+
